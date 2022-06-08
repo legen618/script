@@ -29,6 +29,8 @@ const defaultPlans = [{
 
 let resources = [];
 let dateplans = [];
+let product_id = "";
+let variant_id = "";
 
 let embeddedElement;
 
@@ -67,8 +69,8 @@ Date.prototype.format = function(fmt) {
     
     // 监听选择的sku的变化
     Shopline.event.on('Product::SkuChanged', (data) => {
-		let product_id = data.data.productId;
-		let variant_id = data.data.skuSeq;
+		product_id = data.data.productId;
+		variant_id = data.data.skuSeq;
 
         // 当init的时候加载商品可选资源
 		if (data.data.type === 'init') {
