@@ -1,4 +1,23 @@
-.floating{
-  font-size: 16px;
-  color: red;
+.floating {
+    position: fixed;
+    bottom: 48px;
+    right: 48px;
+    z-index: 1001;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+        rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.multi-select{
+    min-width: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    overflow: scroll;
+}
+
+.confirm-btn{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
