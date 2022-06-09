@@ -177,14 +177,19 @@ function handleConfirm() {
 	fetch('http://localhost:7004/reserve/order/create/' + Shopline.handle, {
 		method: 'POST',
 		headers: {
-			'Accept': 'application.json',
+			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
 		body: data
 	})
 	.then(res => {
-		alert('commit order success!');
-		getDatePlanList();
+		if (res.status == 200) {
+			alert('commit order success!');
+			getDatePlanList();
+		}
+		else {
+			alert('fail in commit order');
+		}
 	})
 	.catch(e => {
 		alert('fail in commit order');
