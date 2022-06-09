@@ -177,7 +177,7 @@ function handleConfirm() {
 	let selectNodeList = document.querySelectorAll("select.select-quantity");
 	for (let i = 0; i < inputNodeList.length; i++) {
 		let input = inputNodeList[i];
-		let plan_id = dateplans[i];
+		let plan_id = dateplans[i].id;
 		let resource_id = selectNodeList[i].value;
 		// 只加入quantity非零的条目
 		if (!isNaN(input.value)) {
