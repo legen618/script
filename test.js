@@ -159,7 +159,7 @@ function handleConfirm() {
 	let inputNodeList = document.querySelectorAll("input.capacity-input");
 	let selectNodeList = document.querySelectorAll("select.select-quantity");
 	inputNodeList.forEach(input => {
-		if (isNaN(input.value)) {
+		if (!isNaN(input.value)) {
 			data.quantity_list.push(Number(input.value));
 		}
 		else {
@@ -176,7 +176,11 @@ function handleConfirm() {
 	console.log(data);
 	fetch('http://localhost:7004/reserve/order/create/' + Shopline.handle, {
 		method: 'POST',
-		data: data
+		headers: {
+			'Accept': 'application.json',
+			'Content-Type': 'application/json'
+		},
+		body: data
 	})
 	.then(res => {
 		alert('commit order success!');
