@@ -108,7 +108,7 @@ function generateTableInnerHtml() {
 	tableBody += "</tbody>";
 
 	return `
-	<div class="reserve-table-container" style="visibility: hidden;">
+	<div class="reserve-table-container" style="visibility: visible;">
 		<table class="reserve-plan-table" cellspacing="0" border>
 			<thead>
 				<tr>
@@ -159,7 +159,12 @@ function handleConfirm() {
 	let inputNodeList = document.querySelectorAll("input.capacity-input");
 	let selectNodeList = document.querySelectorAll("select.select-quantity");
 	inputNodeList.forEach(input => {
-		data.quantity_list.push(input.value);
+		if (isNaN(input.value)) {
+			data.quantity_list.push(Number(input.value));
+		}
+		else {
+			data.quantity_list.push(0);
+		}
 	})
 	selectNodeList.forEach(select => {
 		data.resource_id_list.push(select.value);
@@ -169,6 +174,17 @@ function handleConfirm() {
 	})
 
 	console.log(data);
+	fetch('http://localhost:7004/reserve/order/create/' + Shopline.handle, {
+		method: 'POST',
+		data: data
+	})
+	.then(res => {
+		alert('commit order success!');
+		getDatePlanList();
+	})
+	.catch(e => {
+		alert('fail in commit order');
+	})
 }
 
 function handleTableOpenClose() {
@@ -188,7 +204,7 @@ function getResourceList(handle, productId) {
 		}
 	})
 	.catch(e => {
-		resources = [...defaultResources];
+		resources = [];
 	})
 }
 
@@ -207,11 +223,11 @@ function getDatePlanList(handle, productId, variantId) {
 			dateplans = [...json.data];
 			embeddedElement.innerHTML = "";
 			embeddedElement.innerHTML += generateTableInnerHtml();
-			embeddedElement.innerHTML += generateOpenButtonHtml();
+			// embeddedElement.innerHTML += generateOpenButtonHtml();  取消掉开合按钮，直接展示
 		}
 	})
 	.catch(e => {
-		dateplans = Object.assign({}, defaultPlans);
+		dateplans = [];
 	})
 	// dateplans = [...defaultPlans];
 }
