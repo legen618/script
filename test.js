@@ -101,7 +101,7 @@ function generateTableInnerHtml() {
 			'<td>' + new Date(plan.startTime).format('hh:mm:ss') + '</td>' +
 			'<td>' + new Date(plan.endTime).format('hh:mm:ss') + '</td>' +
 			'<td>' + plan.capacity + '</td>' +
-			'<td><input class="capacity-input" value="0"></td>' +
+			'<td><input class="capacity-input" value="0" onchange="handleInputChange()"></td>' +
 			'<td>' + generateTableSelectHtml() +
 		'</tr>';
 	}
@@ -148,6 +148,23 @@ function loadStyle(url){
     head.appendChild(link);
 }
 
+function handleInputChange() {
+	// 1. 杜绝非法输入
+	// 2. 求和改变页面input的值
+	let inputNodeList = document.querySelectorAll("input.capacity-input");
+	let sum = 0;
+	inputNodeList.forEach(input => {
+		if (isNaN(input.value)) {
+			input.value = 0;
+		}
+		else {
+			sum += Number(input.value);
+		}
+	})
+
+	document.querySelector('.stepper-input.body3').value = sum;
+}
+
 function handleConfirm() {
 	let data = {
 		product_id: product_id,
@@ -158,34 +175,38 @@ function handleConfirm() {
 	};
 	let inputNodeList = document.querySelectorAll("input.capacity-input");
 	let selectNodeList = document.querySelectorAll("select.select-quantity");
-	inputNodeList.forEach(input => {
+	for (let i = 0; i < inputNodeList.length; i++) {
+		let input = inputNodeList[i];
+		let plan_id = dateplans[i];
+		let resource_id = selectNodeList[i].value;
+		// 只加入quantity非零的条目
 		if (!isNaN(input.value)) {
-			data.quantity_list.push(Number(input.value));
+			let quantity = Number(input.value);
+			if (quantity != 0) {
+				data.quantity_list.push(quantity);
+				data.plan_id_list.push(plan_id);
+				data.resource_id_list.push(resource_id);
+			}
 		}
-		else {
-			data.quantity_list.push(0);
-		}
-	})
-	selectNodeList.forEach(select => {
-		data.resource_id_list.push(select.value);
-	})
-	dateplans.forEach(plan => {
-		data.plan_id_list.push(plan.id);
-	})
+	}
+	// 如果全都是零，则提醒
+	if (data.plan_id_list.length == 0) {
+		alert("please order at lease one item!");
+		return;
+	}
 
 	console.log(data);
 	fetch('http://localhost:7004/reserve/order/create/' + Shopline.handle, {
 		method: 'POST',
 		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json; charset=utf-8'
 		},
-		body: data
+		body: JSON.stringify(data)
 	})
 	.then(res => {
 		if (res.status == 200) {
 			alert('commit order success!');
-			getDatePlanList();
+			getDatePlanList(Shopline.handle, product_id, variant_id);
 		}
 		else {
 			alert('fail in commit order');
