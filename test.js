@@ -196,7 +196,7 @@ function handleConfirm() {
 	}
 
 	console.log(data);
-	fetch('http://localhost:7004/reserve/order/create/' + Shopline.handle, {
+	fetch('https://api.shopflex.io/reserve/order/create/' + Shopline.handle, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json; charset=utf-8'
@@ -223,7 +223,7 @@ function handleTableOpenClose() {
 }
 
 function getResourceList(handle, productId) {
-	fetch('http://localhost:7004/reserve/resources/' + handle + '/' +
+	fetch('https://api.shopflex.io/reserve/resources/' + handle + '/' +
 			productId, {
 		method: 'GET'
 	})
@@ -239,7 +239,7 @@ function getResourceList(handle, productId) {
 }
 
 function getDatePlanList(handle, productId, variantId) {
-	fetch('http://localhost:7004/reserve/dateplans/'+ handle + '/' +
+	fetch('https://api.shopflex.io/reserve/dateplans/'+ handle + '/' +
 			productId + '/' + 
 			variantId, {
 		method: 'GET',
